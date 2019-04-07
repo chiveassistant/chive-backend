@@ -4,22 +4,34 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon app.js"
+    "build": "babel src -d build",
+    "start": "babel-watch -w src src/app.js",
+    "serve": "npm run build && node build/app.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "aws-sdk": "^2.400.0",
+    "apollo-server-express": "^2.4.8",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
+    "cors": "^2.8.5",
+    "dotenv": "^7.0.0",
     "express": "^4.16.4",
-    "express-graphql": "^0.7.1",
     "graphql": "^14.1.1",
-    "mongoose": "^5.4.11",
-    "uuid": "^3.3.2"
+    "graphql-tools": "^4.0.4",
+    "jsonwebtoken": "^8.5.0",
+    "mongoose": "^5.4.11"
   },
   "devDependencies": {
-    "nodemon": "^1.18.10"
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.3.4",
+    "@babel/node": "^7.2.2",
+    "@babel/preset-env": "^7.3.4",
+    "babel-core": "^6.26.3",
+    "babel-loader": "^8.0.5",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
+    "babel-watch": "^7.0.0"
   }
 }

@@ -1,7 +1,0 @@
-{ 
-    "env": {
-        "MONGO_USER": "chive", 
-        "MONGO_PASSWORD": "WxOe3jPwS0oAPx1K",
-        "MONGO_DB": "chive-recipes-test"
-    }
-} 
