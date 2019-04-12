@@ -1,33 +1,99 @@
-import { jwtHash } from "../configuration/config";
+import { tokenHash, refreshHash } from "../configuration/config";
+import jwt from "jsonwebtoken";
+import User from "../models/user";
 
-export default (req, res, next) => {
-  const authHeader = req.get("authorization");
-
-  if (!authHeader) {
-    req.isAuth = false;
-    return next();
-  }
-
-  const token = authHeader.split(" ")[1];
-
-  if (!token || token === "") {
-    req.isAuth = false;
-    return next();
-  }
-
-  let decodedToken;
+export const createTokens = async user => {
+  var token = "tokens aren't awaiting";
+  var refreshToken = "tokens aren't awaiting";
 
   try {
-    decodedToken = jwt.verify(token, jwtHash);
+    token = await jwt.sign(
+      {
+        user: {
+          email: user.email,
+          name: user.name
+        }
+      },
+      tokenHash,
+      {
+        expiresIn: "1m"
+      }
+    );
+  } catch (err) {}
+
+  try {
+    refreshToken = await jwt.sign(
+      {
+        user: {
+          email: user.email,
+          name: user.name,
+          hashedPassword: user.password
+        }
+      },
+      refreshHash,
+      {
+        expiresIn: "7d"
+      }
+    );
+  } catch (err) {}
+
+  return {
+    token: token,
+    refreshToken: refreshToken,
+    user: user
+  };
+};
+
+export const refreshTokens = async (token, refreshToken) => {
+  var tokenVerified = false;
+  var refreshTokenVerified = false;
+
+  try {
+    jwt.verify(token, tokenHash);
+    tokenVerified = true;
+  } catch (err) {}
+
+  try {
+    jwt.verify(refreshToken, refreshHash);
+    refreshTokenVerified = true;
+  } catch (err) {}
+
+  if (!tokenVerified || !refreshTokenVerified) {
+    return {};
+  }
+
+  let userEmail = false;
+
+  try {
+    const { user: tokenUser } = jwt.decode(token);
+    userEmail = tokenUser.email;
+    if (!userEmail) {
+      return {};
+    }
   } catch (err) {
-    req.isAuth = false;
-    return next();
+    return {};
   }
 
-  if (!decodedToken) {
-    req.isAuth = false;
-    next();
+  const databaseUser = await User.findOne({ email: userEmail });
+
+  if (!databaseUser) {
+    return {};
   }
 
-  req.userEmail = decodedToken.email;
+  try {
+    const { user: refreshUser } = jwt.decode(refreshToken);
+    if (refreshUser.hashedPassword !== databaseUser.password) {
+      return {};
+    }
+  } catch (err) {
+    return {};
+  }
+
+  const [newToken, newRefreshToken] = await createTokens(databaseUser);
+
+  return {
+    token: newToken,
+    refreshToken: newRefreshToken,
+    user: databaseUser
+  };
 };

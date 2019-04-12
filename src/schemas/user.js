@@ -1,46 +1,33 @@
-import { makeExecutableSchema } from "graphql-tools";
 import bcrypt from "bcryptjs";
-import { jwtHash, passwordHash } from "../configuration/config";
-import jwt from "jsonwebtoken";
+import { passwordHash } from "../configuration/config";
 
 import User from "../models/user";
+import { createTokens } from "../middleware/auth";
 
-const typeDefs = `
+export const typeDefs = `
   type User {
     _id: ID!
     email: String!
     name: String!
   }
 
-  type AuthData {
-    _id: ID!
-    token: String!
-    tokenExpiration: Int!
-  }
-
-  type Query {
+  extend type Query {
     user(email: String!, token: String!): User
-    login(email: String!, password: String!): AuthData
+    login(email: String!, password: String!): User
   }
 
-  type Mutation {
+  extend type Mutation {
     createUser(
       email: String!
       password: String!
       name: String!
-    ): AuthData
+    ): User
   }
 `;
 
-const resolvers = {
+export const resolvers = {
   Query: {
     user: (obj, { email, token }, context, info) => {
-      jwt.verify(token, config.jwtHash, function(err, decoded) {
-        if (decoded.email !== email) {
-          throw new Error("Not authorized to retrieve user");
-        }
-      });
-
       var user = User.findOne({ email: email });
 
       if (!user) {
@@ -54,7 +41,7 @@ const resolvers = {
         name: user.name
       };
     },
-    login: async (obj, { email, password }, context, info) => {
+    login: async (obj, { email, password }, { req, res }, info) => {
       const user = await User.findOne({ email: email });
 
       if (!user) {
@@ -67,51 +54,58 @@ const resolvers = {
         throw new Error("Invalid credentials");
       }
 
+      const tokens = createTokens(user);
+
+      res.cookie("token", tokens.token, {
+        maxAge: 60 * 60 * 24 * 7,
+        httpOnly: true
+      });
+
+      res.cookie("refresh-token", tokens.refreshToken, {
+        maxAge: 60 * 60 * 24 * 7,
+        httpOnly: true
+      });
+
       return {
-        _id: user._id,
-        token: jwt.sign({ email: user.email, time: Date.now() }, jwtHash, {
-          expiresIn: "24h"
-        }),
-        tokenExpiration: 1
+        ...user,
+        password: null
       };
     }
   },
   Mutation: {
-    createUser: async (obj, args, context, info) => {
-      const { email, password, name } = args;
-      return User.findOne({ email: email })
-        .then(user => {
-          if (user) {
-            throw new Error("Email already in use");
-          }
-          return bcrypt.hash(password, passwordHash);
-        })
-        .then(hashedPassword => {
-          const user = new User({
-            email: email,
-            password: hashedPassword,
-            name: name,
-            inventory: []
-          });
-          return user.save();
-        })
-        .then(user => {
-          return {
-            _id: user._id,
-            token: jwt.sign({ email: user.email, time: Date.now() }, jwtHash, {
-              expiresIn: "24h"
-            }),
-            tokenExpiration: 1
-          };
-        })
-        .catch(err => {
-          throw err;
-        });
+    createUser: async (obj, { email, password, name }, { req, res }, info) => {
+      var tempUser = await User.findOne({ email: email });
+
+      if (tempUser) {
+        throw new Error("Email already in use");
+      }
+
+      const hashedPassword = await bcrypt.hash(password, passwordHash);
+
+      const user = new User({
+        email: email,
+        password: hashedPassword,
+        name: name,
+        inventory: []
+      });
+
+      await user.save();
+
+      const tokens = await createTokens(user);
+
+      res.cookie("token", tokens.token, {
+        maxAge: 60 * 60 * 24 * 7,
+        httpOnly: true
+      });
+
+      res.cookie("refresh-token", tokens.refreshToken, {
+        maxAge: 60 * 60 * 24 * 7,
+        httpOnly: true
+      });
+
+      user.password = null;
+
+      return user;
     }
   }
 };
-
-export default makeExecutableSchema({
-  typeDefs: typeDefs,
-  resolvers: resolvers
-});

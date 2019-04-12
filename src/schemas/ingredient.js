@@ -1,6 +1,6 @@
 import { makeExecutableSchema } from "graphql-tools";
 
-const typeDefs = `
+export const typeDefs = `
   type Ingredient {
     _id: ID!
     name: String! 
@@ -15,6 +15,4 @@ const typeDefs = `
   }
 `;
 
-export default makeExecutableSchema({
-  typeDefs: typeDefs
-});
+export const resolvers = {};

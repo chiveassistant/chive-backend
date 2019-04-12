@@ -1,7 +1,7 @@
 import { makeExecutableSchema } from "graphql-tools";
 import Recipe from "../models/recipe";
 
-const typeDefs = `
+export const typeDefs = `
   type Recipe {
     _id: ID!
     name: String!
@@ -21,22 +21,17 @@ const typeDefs = `
     rating: Float
   }
 
-  type Query {
+  extend type Query {
     recipeByName(name: String!): [Recipe!]!
   }
 `;
 
-const resolvers = {
+export const resolvers = {
   Query: {
-    recipeByName: (obj, args, context, info) => {
+    recipeByName: (obj, args, { req, res }, info) => {
       return Recipe.find({
         name: /args.name/i
       });
     }
   }
 };
-
-export default makeExecutableSchema({
-  typeDefs: typeDefs,
-  resolvers: resolvers
-});

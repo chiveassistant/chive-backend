@@ -1,27 +1,27 @@
 import { makeExecutableSchema } from "graphql-tools";
 
-const typeDefs = `
+export const typeDefs = `
   extend type User {
     inventory: [Ingredient!]!
   }
 
-  type Query {
-    recipeByIngredients(ingredients: [Ingredient!]!): [Recipe!]!
+  extend type Query {
+    recipeByIngredients(ingredients: [IngredientInput!]!): [Recipe!]!
   }
 
-  type Mutation {
+  extend type Mutation {
     createRecipe(
       name: String!
       description: String
-      ingredients: [Ingredient!]!
+      ingredients: [IngredientInput!]!
       directions: [String!]!
       time: Float
       rating: Float
-    )
+    ): Recipe!
   }
 `;
 
-const resolvers = {
+export const resolvers = {
   Query: {
     recipeByIngredients: (obj, args, context, info) => {
       return [];
@@ -43,8 +43,3 @@ const resolvers = {
     }
   }
 };
-
-export default makeExecutableSchema({
-  typeDefs: typeDefs,
-  resolvers: resolvers
-});
