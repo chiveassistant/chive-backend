@@ -4,10 +4,13 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import { ApolloServer } from "apollo-server-express";
 import { connect } from "mongoose";
+import jwt from "jsonwebtoken";
 
 import schema from "./schemas/schema";
 import { tokenHash } from "./configuration/config";
-import { refreshTokens } from "./middleware/auth";
+import { refreshToken } from "./middleware/auth";
+
+import User from "./models/user";
 
 const app = express();
 
@@ -24,27 +27,26 @@ const auth = async (req, res, next) => {
   if (!token) return next();
 
   try {
-    const { user: thinUser } = jwt.verify(token, tokenHash);
-    req.user = await User.findOne({ email: thinUser.email });
-  } catch (err) {
-    const refreshToken = req.cookies["refresh-token"];
+    const { user, expiration } = jwt.verify(token, tokenHash);
+    req.user = await User.findOne({ email: user.email });
 
-    if (!refreshToken) return next();
-
-    const newTokens = await refreshTokens(token, refreshToken);
-
-    if (newTokens.token && newTokens.newRefreshToken) {
-      res.cookie("token", newTokens.token, {
-        maxAge: 60 * 60 * 24 * 7,
-        httpOnly: true
-      });
-      res.cookie("refresh-token", newTokens.refreshToken, {
-        maxAge: 60 * 60 * 24 * 7,
-        httpOnly: true
-      });
+    // if the token is within 2 days of expiring, refresh it
+    if (expiration - Date.now() <= 60 * 60 * 24 * 2) {
+      const { newToken, user } = await refreshToken(token);
+      if (newToken && user) {
+        res.cookie("token", newToken, {
+          maxAge: 60 * 60 * 24 * 7, // 7 days
+          httpOnly: true
+        });
+      }
+      console.log("Refreshed expiring token");
     }
 
-    req.user = newTokens.user;
+    console.log("Found user from cookie: ", req.user.email);
+  } catch (err) {
+    console.log("Check token verify error: ", err);
+    console.log("User has been logged out due to inactivity.");
+    req.user = user;
   }
 
   return next();

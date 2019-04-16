@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs";
 import { passwordHash } from "../configuration/config";
 
 import User from "../models/user";
-import { createTokens } from "../middleware/auth";
+import { createToken } from "../middleware/auth";
 
 export const typeDefs = `
   type User {
@@ -13,7 +13,6 @@ export const typeDefs = `
 
   extend type Query {
     user(email: String!, token: String!): User
-    login(email: String!, password: String!): User
   }
 
   extend type Mutation {
@@ -22,6 +21,7 @@ export const typeDefs = `
       password: String!
       name: String!
     ): User
+    login(email: String!, password: String!): User
   }
 `;
 
@@ -40,9 +40,11 @@ export const resolvers = {
         email: user.email,
         name: user.name
       };
-    },
+    }
+  },
+  Mutation: {
     login: async (obj, { email, password }, { req, res }, info) => {
-      const user = await User.findOne({ email: email });
+      var user = await User.findOne({ email: email });
 
       if (!user) {
         throw new Error("Invalid credentials");
@@ -54,25 +56,20 @@ export const resolvers = {
         throw new Error("Invalid credentials");
       }
 
-      const tokens = createTokens(user);
+      const { token, user } = await createToken(user);
 
-      res.cookie("token", tokens.token, {
+      res.cookie("token", token, {
         maxAge: 60 * 60 * 24 * 7,
         httpOnly: true
       });
 
-      res.cookie("refresh-token", tokens.refreshToken, {
-        maxAge: 60 * 60 * 24 * 7,
-        httpOnly: true
-      });
+      user.password = null;
 
-      return {
-        ...user,
-        password: null
-      };
-    }
-  },
-  Mutation: {
+      console.info("User successfully logged in: ", user.email);
+
+      return user;
+    },
+
     createUser: async (obj, { email, password, name }, { req, res }, info) => {
       var tempUser = await User.findOne({ email: email });
 
@@ -91,19 +88,16 @@ export const resolvers = {
 
       await user.save();
 
-      const tokens = await createTokens(user);
+      const { token } = await createToken(user);
 
-      res.cookie("token", tokens.token, {
-        maxAge: 60 * 60 * 24 * 7,
-        httpOnly: true
-      });
-
-      res.cookie("refresh-token", tokens.refreshToken, {
+      res.cookie("token", token, {
         maxAge: 60 * 60 * 24 * 7,
         httpOnly: true
       });
 
       user.password = null;
+
+      console.info("User successfully created: ", user.email);
 
       return user;
     }
