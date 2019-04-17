@@ -1,7 +1,12 @@
 import dotenv from "dotenv";
 dotenv.config({ silent: true });
 
-var environmentKeys = ["PASSWORDHASH", "TOKENSECRET", "REFRESHSECRET"];
+var environmentKeys = [
+  "PASSWORDHASH",
+  "TOKENSECRET",
+  "SERVERPORT",
+  "CORSORIGIN"
+];
 
 environmentKeys = environmentKeys.filter(key => {
   if (typeof process.env[key] === "undefined") {
@@ -20,4 +25,5 @@ if (environmentKeys.length > 0) {
 
 export const passwordHash = parseInt(process.env.PASSWORDHASH);
 export const tokenHash = process.env.TOKENSECRET;
-export const refreshHash = process.env.REFRESHSECRET;
+export const serverPort = process.env.SERVERPORT;
+export const corsOrigin = process.env.CORSORIGIN;

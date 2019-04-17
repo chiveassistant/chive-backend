@@ -6,6 +6,8 @@ import { ApolloServer } from "apollo-server-express";
 import { connect } from "mongoose";
 import jwt from "jsonwebtoken";
 
+import { serverPort, corsOrigin } from "./configuration/config";
+
 import schema from "./schemas/schema";
 import { tokenHash } from "./configuration/config";
 import { refreshToken } from "./middleware/auth";
@@ -15,7 +17,7 @@ import User from "./models/user";
 const app = express();
 
 var corsOptions = {
-  origin: "http://localhost:3080",
+  origin: corsOrigin,
   credentials: true
 };
 
@@ -71,10 +73,9 @@ connect(
   { useNewUrlParser: true }
 )
   .then(() => {
-    var port = 3000;
-    app.listen({ port: port }, () =>
+    app.listen({ port: serverPort }, () =>
       console.log(
-        `Server ready at http://localhost:${port}${server.graphqlPath}`
+        `Server ready at http://localhost:${serverPort}${server.graphqlPath}`
       )
     );
   })
