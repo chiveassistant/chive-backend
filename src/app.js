@@ -16,6 +16,10 @@ import User from "./models/user";
 
 const app = express();
 
+app.use("/health", (req, res, next) => {
+  res.send("I'm healthy!");
+});
+
 var corsOptions = {
   origin: corsOrigin,
   credentials: true
