@@ -1,5 +1,5 @@
 import bcrypt from "bcryptjs";
-import { passwordHash } from "../configuration/config";
+import { saltRounds } from "../configuration/config";
 
 import User from "../models/user";
 import { createToken } from "../middleware/auth";
@@ -77,7 +77,7 @@ export const resolvers = {
         throw new Error("Email already in use");
       }
 
-      const hashedPassword = await bcrypt.hash(password, passwordHash);
+      const hashedPassword = await bcrypt.hash(password, saltRounds);
 
       const user = new User({
         email: email,
