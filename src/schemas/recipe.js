@@ -1,5 +1,10 @@
-import { makeExecutableSchema } from "graphql-tools";
 import Recipe from "../models/recipe";
+
+/**
+ * TODO:
+ * - extend Recipe in links to use Ingredient type for ingredients
+ * - extend RecipeInput in links to use Ingredient type for ingredients
+ */
 
 export const typeDefs = `
   type Recipe {

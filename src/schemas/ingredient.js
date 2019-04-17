@@ -1,5 +1,3 @@
-import { makeExecutableSchema } from "graphql-tools";
-
 export const typeDefs = `
   type Ingredient {
     _id: ID!

@@ -4,6 +4,11 @@ import { saltRounds } from "../configuration/config";
 import User from "../models/user";
 import { createToken } from "../middleware/auth";
 
+/**
+ * TODO:
+ * - consider a delete user mutation/resolver
+ */
+
 export const typeDefs = `
   type User {
     _id: ID!

@@ -1,5 +1,10 @@
 import { Schema, model } from "mongoose";
 
+/**
+ * TODO:
+ * - see if there are enums for the unit?
+ */
+
 const ingredientSchema = new Schema(
   {
     name: {

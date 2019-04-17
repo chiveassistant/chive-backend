@@ -1,5 +1,10 @@
 import { Schema, model } from "mongoose";
 
+/**
+ * TODO:
+ * - update recipe schema to use objects instead of strings for ingredients
+ */
+
 const recipeSchema = new Schema(
   {
     name: {

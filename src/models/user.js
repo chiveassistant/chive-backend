@@ -1,5 +1,10 @@
 import { Schema, model } from "mongoose";
 
+/**
+ * TODO:
+ * - add grocery list to user obj
+ */
+
 const userSchema = new Schema(
   {
     email: {

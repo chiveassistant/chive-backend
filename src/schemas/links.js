@@ -1,4 +1,7 @@
-import { makeExecutableSchema } from "graphql-tools";
+/**
+ * TODO:
+ * - make createRecipe take a RecipeInput instead of all the fields
+ */
 
 export const typeDefs = `
   extend type User {
@@ -20,6 +23,12 @@ export const typeDefs = `
     ): Recipe!
   }
 `;
+
+/**
+ * TODO:
+ * - finish recipeByIngredients resolver
+ * - finish createRecipe resolver
+ */
 
 export const resolvers = {
   Query: {
