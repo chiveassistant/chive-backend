@@ -17,7 +17,7 @@ export const typeDefs = `
   }
 
   extend type Query {
-    user(email: String!, token: String!): User
+    loggedIn: User
   }
 
   extend type Mutation {
@@ -32,19 +32,14 @@ export const typeDefs = `
 
 export const resolvers = {
   Query: {
-    user: (obj, { email, token }, context, info) => {
-      var user = User.findOne({ email: email });
-
-      if (!user) {
-        // this could potentially be a point to see if someone found our key because they have encoded the token with the right hash and are providing the right email with the token
-        throw new Error("User not found");
+    loggedIn: (obj, vars, { req, res }, info) => {
+      if (req.user) {
+        const user = req.user;
+        user.password = null;
+        return user;
+      } else {
+        return null;
       }
-
-      return {
-        _id: user._id,
-        email: user.email,
-        name: user.name
-      };
     }
   },
   Mutation: {
