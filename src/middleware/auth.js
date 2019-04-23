@@ -1,4 +1,4 @@
-import { tokenHash } from "../configuration/config";
+import { tokenHash, corsAllowed } from "../configuration/config";
 import jwt from "jsonwebtoken";
 import User from "../models/user";
 
@@ -79,7 +79,8 @@ export const auth = async (req, res, next) => {
       if (newToken && user) {
         res.cookie("token", newToken, {
           maxAge: 60 * 60 * 24 * 7, // 7 days
-          httpOnly: true
+          httpOnly: true,
+          domain: corsAllowed
         });
       }
       console.log("Refreshed expiring token");

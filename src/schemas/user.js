@@ -4,6 +4,8 @@ import { saltRounds } from "../configuration/config";
 import User from "../models/user";
 import { createToken } from "../middleware/auth";
 
+import { corsAllowed } from "../configuration/config";
+
 /**
  * TODO:
  * - consider a delete user mutation/resolver
@@ -59,8 +61,9 @@ export const resolvers = {
       const { token, user } = await createToken(user);
 
       res.cookie("token", token, {
-        maxAge: 60 * 60 * 24 * 7,
-        httpOnly: true
+        maxAge: 60 * 60 * 24 * 7, // 7 days
+        httpOnly: true,
+        domain: corsAllowed
       });
 
       user.password = null;
@@ -91,8 +94,9 @@ export const resolvers = {
       const { token } = await createToken(user);
 
       res.cookie("token", token, {
-        maxAge: 60 * 60 * 24 * 7,
-        httpOnly: true
+        maxAge: 60 * 60 * 24 * 7, // 7 days
+        httpOnly: true,
+        domain: corsAllowed
       });
 
       user.password = null;
