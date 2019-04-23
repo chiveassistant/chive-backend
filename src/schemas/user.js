@@ -4,7 +4,7 @@ import { saltRounds } from "../configuration/config";
 import User from "../models/user";
 import { createToken } from "../middleware/auth";
 
-import { corsAllowed } from "../configuration/config";
+import { corsCookie } from "../configuration/config";
 
 /**
  * TODO:
@@ -63,7 +63,7 @@ export const resolvers = {
       res.cookie("token", token, {
         maxAge: 60 * 60 * 24 * 7, // 7 days
         httpOnly: true,
-        domain: corsAllowed
+        domain: corsCookie
       });
 
       user.password = null;
@@ -96,7 +96,7 @@ export const resolvers = {
       res.cookie("token", token, {
         maxAge: 60 * 60 * 24 * 7, // 7 days
         httpOnly: true,
-        domain: corsAllowed
+        domain: corsCookie
       });
 
       user.password = null;

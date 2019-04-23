@@ -6,7 +6,7 @@ var environmentKeys = [
   "TOKENSECRET",
   "SERVERPORT",
   "CORSORIGIN",
-  "CORSALLOWED"
+  "CORSCOOKIE"
 ];
 
 environmentKeys = environmentKeys.filter(key => {
@@ -27,5 +27,5 @@ if (environmentKeys.length > 0) {
 export const saltRounds = parseInt(process.env.SALTROUNDS);
 export const tokenHash = process.env.TOKENSECRET;
 export const serverPort = process.env.SERVERPORT;
-export const corsOrigin = process.env.CORSORIGIN;
-export const corsAllowed = new RegExp(process.env.CORSALLOWED);
+export const corsOrigin = new RegExp(process.env.CORSORIGIN);
+export const corsCookie = process.env.CORSCOOKIE;
