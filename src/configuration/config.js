@@ -28,4 +28,4 @@ export const saltRounds = parseInt(process.env.SALTROUNDS);
 export const tokenHash = process.env.TOKENSECRET;
 export const serverPort = process.env.SERVERPORT;
 export const corsOrigin = process.env.CORSORIGIN;
-export const corsAllowed = process.env.CORSALLOWED;
+export const corsAllowed = new RegExp(process.env.CORSALLOWED);
