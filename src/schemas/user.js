@@ -7,8 +7,8 @@ import { createToken } from "../middleware/auth";
 import { corsCookie } from "../configuration/config";
 
 /**
- * TODO:
- * - consider a delete user mutation/resolver
+ * TODO: consider a delete user mutation/resolver
+ * TODO: move the loggedIn Query to links and then return "more user"
  */
 
 export const typeDefs = `
