@@ -22,7 +22,7 @@ export const userSchema = new Schema(
     },
     profilePicture: {
       type: Buffer,
-      required: true
+      required: false
     },
     inventory: {
       type: [ingredientSchema],
