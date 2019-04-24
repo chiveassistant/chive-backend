@@ -1,11 +1,12 @@
 import { Schema, model } from "mongoose";
+import { ingredientSchema } from "./ingredient";
 
 /**
  * TODO:
  * - update recipe schema to use objects instead of strings for ingredients
  */
 
-const recipeSchema = new Schema(
+export const recipeSchema = new Schema(
   {
     name: {
       type: String,
@@ -16,20 +17,28 @@ const recipeSchema = new Schema(
       required: false
     },
     ingredients: {
-      type: [String],
+      type: [ingredientSchema],
       required: true
     },
     directions: {
       type: [String],
       required: true
     },
-    time: {
-      type: Number,
-      required: false
-    },
     rating: {
       type: Number,
       required: false
+    },
+    image: {
+      type: Buffer,
+      required: false
+    },
+    source: {
+      type: String,
+      required: true
+    },
+    siteName: {
+      type: String,
+      required: true
     }
   },
   {
