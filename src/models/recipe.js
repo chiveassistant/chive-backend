@@ -10,7 +10,7 @@ export const recipeSchema = new Schema(
   {
     name: {
       type: String,
-      required: false
+      required: true
     },
     description: {
       type: String,
@@ -18,11 +18,11 @@ export const recipeSchema = new Schema(
     },
     ingredients: {
       type: [groupSchema],
-      required: false
+      required: true
     },
     directions: {
       type: [String],
-      required: false
+      required: true
     },
     rating: {
       type: Number,
@@ -34,11 +34,11 @@ export const recipeSchema = new Schema(
     },
     source: {
       type: String,
-      required: false
+      required: true
     },
     siteName: {
       type: String,
-      required: false
+      required: true
     }
   },
   {

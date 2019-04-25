@@ -4,15 +4,15 @@ export const ingredientSchema = new Schema(
   {
     name: {
       type: String,
-      required: false
+      required: true
     },
     quantity: {
       type: String,
-      required: false
+      required: true
     },
     unit: {
       type: String,
-      required: false
+      required: true
     }
   },
   {

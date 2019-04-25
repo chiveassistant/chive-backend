@@ -26,7 +26,7 @@ export const typeDefs = `
 export const resolvers = {
   Query: {
     recipeByName: async (obj, { name }, { req, res }, info) => {
-      const nameQuery = RegExp(name);
+      const nameQuery = RegExp(name, "i");
       console.log(nameQuery);
       const results = await Recipe.find({ name: nameQuery });
 

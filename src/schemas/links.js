@@ -44,7 +44,7 @@ export const resolvers = {
   Query: {
     recipeByIngredients: async (obj, { ingredients }, context, info) => {
       const ingredientsQuery = ingredients.map(ingredientName => {
-        return { "ingredients.ingredients.name": RegExp(ingredientName) };
+        return { "ingredients.ingredients.name": RegExp(ingredientName, "i") };
       });
 
       const results = await Recipe.find(

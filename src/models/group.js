@@ -5,11 +5,11 @@ export const groupSchema = new Schema(
   {
     groupName: {
       type: String,
-      required: false
+      required: true
     },
     ingredients: {
       type: [ingredientSchema],
-      required: false
+      required: true
     }
   },
   {
