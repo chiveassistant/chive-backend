@@ -90,7 +90,7 @@ export const auth = async (req, res, next) => {
   } catch (err) {
     console.log("Check token verify error: ", err);
     console.log("User has been logged out due to inactivity.");
-    req.user = user;
+    req.user = undefined;
   }
 
   return next();

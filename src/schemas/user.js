@@ -52,10 +52,6 @@ export const typeDefs = `
     removeGroceryItem(
       recipeId: ID!
     ): User
-
-    editPicture(
-      imageFile: Buffer!
-    ): User
   }
 `;
 
@@ -112,8 +108,7 @@ export const resolvers = {
       const user = new User({
         email: email,
         password: hashedPassword,
-        name: name,
-        inventory: []
+        name: name
       });
 
       await user.save();
@@ -182,19 +177,6 @@ export const resolvers = {
       user.groceryList = user.groceryList.filter((value, index, arr) => {
         return value !== recipeId;
       });
-
-      await user.save();
-
-      return user;
-    },
-
-    editPicture: async (obj, { imageFile }, { req, res }, info) => {
-      var user = req.user;
-      if (!user) {
-        throw new Error("Not signed in");
-      }
-
-      user.profilePicture = imageFile;
 
       await user.save();
 

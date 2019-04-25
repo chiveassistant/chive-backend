@@ -5,10 +5,11 @@ import {
   typeDefs as Ingredient,
   resolvers as ingredientResolvers
 } from "./ingredient";
+import { typeDefs as Group } from "./group";
 import { typeDefs as Recipe, resolvers as recipeResolvers } from "./recipe";
+import { typeDefs as Upload, resolvers as uploadResolvers } from "./upload";
 import { typeDefs as User, resolvers as userResolvers } from "./user";
 import { typeDefs as Links, resolvers as linksResolvers } from "./links";
-import { typeDefs as Group } from "./group";
 
 const Query = `
   type Query {
@@ -23,8 +24,9 @@ const Mutation = `
 `;
 
 export default makeExecutableSchema({
-  typeDefs: [Query, Mutation, Ingredient, Group, Recipe, User, Links],
+  typeDefs: [Query, Mutation, Upload, Ingredient, Group, Recipe, User, Links],
   resolvers: merge(
+    uploadResolvers,
     ingredientResolvers,
     recipeResolvers,
     userResolvers,

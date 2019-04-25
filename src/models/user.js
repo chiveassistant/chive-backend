@@ -21,7 +21,7 @@ export const userSchema = new Schema(
       required: true
     },
     profilePicture: {
-      type: Buffer,
+      type: String,
       required: false
     },
     inventory: {
