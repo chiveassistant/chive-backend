@@ -31,6 +31,14 @@ export const typeDefs = `
       time: Float
       rating: Float
     ): Recipe!
+
+    addInventoryItem(
+      ingredient: IngredientInput!
+    ): User
+    
+    removeInventoryItem(
+      ingredient: IngredientInput!
+    ): User
   }
 `;
 
@@ -77,6 +85,34 @@ export const resolvers = {
       console.log("directions: ", directions);
       console.log("time: ", time);
       console.log("rating: ", rating);
+    },
+
+    addInventoryItem: async (obj, args, { req, res }, info) => {
+      //      console.log("args: ", args);
+      var user = req.user;
+      if (!user) {
+        throw new Error("Not signed in :(");
+      }
+      user.inventory.push({ args });
+
+      await user.save();
+
+      return user;
+    },
+
+    removeInventoryItem: async (obj, args, { req, res }, info) => {
+      var user = req.user;
+      if (!user) {
+        throw new Error("Not signed in :(");
+      }
+
+      user.inventory = user.inventory.filter((value, index, arr) => {
+        return value !== args;
+      });
+
+      await user.save();
+
+      return user;
     }
   }
 };

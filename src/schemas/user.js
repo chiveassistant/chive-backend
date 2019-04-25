@@ -31,7 +31,31 @@ export const typeDefs = `
       password: String!
       name: String!
     ): User
-    login(email: String!, password: String!): User
+    
+    login(
+      email: String!,
+      password: String!
+    ): User
+
+    addFavorite(
+      recipeId: ID!
+    ): User
+    
+    removeFavorite(
+      recipeId: ID!
+    ): User
+
+    addGroceryItem(
+      recipeId: ID!
+    ): User
+    
+    removeGroceryItem(
+      recipeId: ID!
+    ): User
+
+    editPicture(
+      imageFile: Buffer!
+    ): User
   }
 `;
 
@@ -105,6 +129,74 @@ export const resolvers = {
       user.password = null;
 
       console.info("User successfully created: ", user.email);
+
+      return user;
+    },
+
+    addFavorite: async (obj, { recipeId }, { req, res }, info) => {
+      var user = req.user;
+      if (!user) {
+        throw new Error("Not signed in :(");
+      }
+
+      user.favorites.push(recipeId);
+
+      await user.save();
+
+      return user;
+    },
+
+    removeFavorite: async (obj, { recipeId }, { req, res }, info) => {
+      var user = req.user;
+      if (!user) {
+        throw new Error("Not signed in");
+      }
+
+      user.favorites = user.favorites.filter((value, index, arr) => {
+        return value !== recipeId;
+      });
+
+      await user.save();
+
+      return user;
+    },
+
+    addGroceryItem: async (obj, { recipeId }, { req, res }, info) => {
+      var user = req.user;
+      if (!user) {
+        throw new Error("Not signed in");
+      }
+
+      user.groceryList.push(recipeId);
+
+      await user.save();
+
+      return user;
+    },
+    removeGroceryItem: async (obj, { recipeId }, { req, res }, info) => {
+      var user = req.user;
+      if (!user) {
+        throw new Error("Not signed in");
+      }
+
+      user.groceryList = user.groceryList.filter((value, index, arr) => {
+        return value !== recipeId;
+      });
+
+      await user.save();
+
+      return user;
+    },
+
+    editPicture: async (obj, { imageFile }, { req, res }, info) => {
+      var user = req.user;
+      if (!user) {
+        throw new Error("Not signed in");
+      }
+
+      user.profilePicture = imageFile;
+
+      await user.save();
 
       return user;
     }
