@@ -2,13 +2,13 @@ export const typeDefs = `
   type Ingredient {
     _id: ID!
     name: String! 
-    amount: Float!
+    quantity: String!
     unit: String!
   }
 
   input IngredientInput {
     name: String!
-    amount: Float!
+    quantity: String!
     unit: String!
   }
 `;

@@ -8,6 +8,7 @@ import {
 import { typeDefs as Recipe, resolvers as recipeResolvers } from "./recipe";
 import { typeDefs as User, resolvers as userResolvers } from "./user";
 import { typeDefs as Links, resolvers as linksResolvers } from "./links";
+import { typeDefs as Group } from "./group";
 
 const Query = `
   type Query {
@@ -22,7 +23,7 @@ const Mutation = `
 `;
 
 export default makeExecutableSchema({
-  typeDefs: [Query, Mutation, Ingredient, Recipe, User, Links],
+  typeDefs: [Query, Mutation, Ingredient, Group, Recipe, User, Links],
   resolvers: merge(
     ingredientResolvers,
     recipeResolvers,

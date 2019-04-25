@@ -11,19 +11,11 @@ export const typeDefs = `
     _id: ID!
     name: String!
     description: String
-    ingredients: [String!]!
     directions: [String!]!
-    time: Int
     rating: Float
-  }
-
-  input RecipeInput {
-    name: String!
-    description: String
-    ingredients: [String!]!
-    directions: [String!]!
-    time: Int
-    rating: Float
+    image: String
+    source: String!
+    siteName: String!
   }
 
   extend type Query {
@@ -33,10 +25,12 @@ export const typeDefs = `
 
 export const resolvers = {
   Query: {
-    recipeByName: (obj, args, { req, res }, info) => {
-      return Recipe.find({
-        name: /args.name/i
-      });
+    recipeByName: async (obj, { name }, { req, res }, info) => {
+      const nameQuery = RegExp(name);
+      console.log(nameQuery);
+      const results = await Recipe.find({ name: nameQuery });
+
+      return results;
     }
   }
 };

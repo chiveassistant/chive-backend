@@ -16,6 +16,9 @@ export const typeDefs = `
     _id: ID!
     email: String!
     name: String!
+    profilePicture: String
+    favorites: [Int!]!
+    groceryList: [Int!]!
   }
 
   extend type Query {

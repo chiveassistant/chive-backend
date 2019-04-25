@@ -1,5 +1,5 @@
 import { Schema, model } from "mongoose";
-import { ingredientSchema } from "./ingredient";
+import { groupSchema } from "./group";
 
 /**
  * TODO:
@@ -10,19 +10,19 @@ export const recipeSchema = new Schema(
   {
     name: {
       type: String,
-      required: true
+      required: false
     },
     description: {
       type: String,
       required: false
     },
     ingredients: {
-      type: [ingredientSchema],
-      required: true
+      type: [groupSchema],
+      required: false
     },
     directions: {
       type: [String],
-      required: true
+      required: false
     },
     rating: {
       type: Number,
@@ -34,11 +34,11 @@ export const recipeSchema = new Schema(
     },
     source: {
       type: String,
-      required: true
+      required: false
     },
     siteName: {
       type: String,
-      required: true
+      required: false
     }
   },
   {

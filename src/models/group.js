@@ -1,17 +1,14 @@
 import { Schema, model } from "mongoose";
+import { ingredientSchema } from "./ingredient";
 
-export const ingredientSchema = new Schema(
+export const groupSchema = new Schema(
   {
-    name: {
+    groupName: {
       type: String,
       required: false
     },
-    quantity: {
-      type: String,
-      required: false
-    },
-    unit: {
-      type: String,
+    ingredients: {
+      type: [ingredientSchema],
       required: false
     }
   },
