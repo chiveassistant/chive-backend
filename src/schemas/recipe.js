@@ -20,6 +20,7 @@ export const typeDefs = `
 
   extend type Query {
     recipeByName(name: String!): [Recipe!]!
+    recipeById(id: ID!): Recipe!
   }
 `;
 
@@ -31,6 +32,11 @@ export const resolvers = {
       const results = await Recipe.find({ name: nameQuery });
 
       return results;
+    },
+    recipeById: async (obj, { id }, { req, res }, info) => {
+      const result = await Recipe.findById(id);
+      console.log(result);
+      return result;
     }
   }
 };

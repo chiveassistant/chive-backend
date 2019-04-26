@@ -29,7 +29,7 @@ export const recipeSchema = new Schema(
       required: false
     },
     image: {
-      type: Buffer,
+      type: String,
       required: false
     },
     source: {
