@@ -45,11 +45,11 @@ export const typeDefs = `
       recipeId: ID!
     ): User
 
-    addGroceryItem(
+    addGrocery(
       recipeId: ID!
     ): User
     
-    removeGroceryItem(
+    removeGrocery(
       recipeId: ID!
     ): User
   }
@@ -143,12 +143,13 @@ export const resolvers = {
 
     removeFavorite: async (obj, { recipeId }, { req, res }, info) => {
       var user = req.user;
+
       if (!user) {
         throw new Error("Not signed in");
       }
 
       user.favorites = user.favorites.filter((value, index, arr) => {
-        return value !== recipeId;
+        return value.toString() !== recipeId;
       });
 
       await user.save();
@@ -156,7 +157,7 @@ export const resolvers = {
       return user;
     },
 
-    addGroceryItem: async (obj, { recipeId }, { req, res }, info) => {
+    addGrocery: async (obj, { recipeId }, { req, res }, info) => {
       var user = req.user;
       if (!user) {
         throw new Error("Not signed in");
@@ -168,14 +169,14 @@ export const resolvers = {
 
       return user;
     },
-    removeGroceryItem: async (obj, { recipeId }, { req, res }, info) => {
+    removeGrocery: async (obj, { recipeId }, { req, res }, info) => {
       var user = req.user;
       if (!user) {
         throw new Error("Not signed in");
       }
 
       user.groceryList = user.groceryList.filter((value, index, arr) => {
-        return value !== recipeId;
+        return value.toString() !== recipeId;
       });
 
       await user.save();
