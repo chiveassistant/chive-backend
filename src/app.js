@@ -17,7 +17,8 @@ app.use("/health", ({ res }) => {
   res.send("I'm healthy!");
 });
 
-app.use("/uploads", express.static(__dirname + "/../storage/uploads/"));
+app.use("/images/uploads", express.static(__dirname + "/../storage/uploads/"));
+app.use("/images/recipes", express.static(__dirname + "/../storage/recipes/"));
 
 var corsOptions = {
   origin: corsOrigin,
