@@ -67,8 +67,6 @@ export const auth = async (req, res, next) => {
     const { user, expiration } = jwt.verify(token, tokenHash);
     const databaseUser = await User.findOne({ email: user.email });
 
-    console.log("databaseUser: ", databaseUser);
-
     if (databaseUser) {
       req.user = databaseUser;
     } else {

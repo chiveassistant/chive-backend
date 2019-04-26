@@ -32,7 +32,7 @@ export const resolvers = {
       return results;
     },
     recipeById: async (obj, { id }, { req, res }, info) => {
-      const result = await Recipe.findById(id);
+      var result = await Recipe.findOne({ _id: id });
       return result;
     }
   }

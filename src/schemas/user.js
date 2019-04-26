@@ -61,9 +61,6 @@ export const resolvers = {
       if (req.user) {
         const user = req.user;
         user.password = null;
-
-        console.log("User: ", user);
-
         return user;
       } else {
         return null;
