@@ -19,7 +19,7 @@ const storeFS = async (stream, userId) => {
   try {
     await ensureDir(UPLOAD_DIR);
   } catch (err) {
-    console.log("Error ensuring upload dir: ", UPLOAD_DIR, err);
+    console.error(`Error ensuring upload dir: ${UPLOAD_DIR}`, err);
   }
 
   return new Promise((resolve, reject) =>
@@ -52,17 +52,16 @@ const processUpload = async (file, user) => {
   user.profilePicture = filename;
 
   try {
-    // TODO: implement overwrite and upload
     await upload.save();
   } catch (err) {
-    console.log("Upload File Error: ", err);
+    console.error("Upload File Error: ", err);
   }
 
   try {
     await user.save();
   } catch (err) {
-    console.log("Upload User Error: ", err);
-    console.log("User: ", user);
+    console.error("Upload User Error: ", err);
+    console.info("Upload User Error User: ", user);
   }
 
   return user;

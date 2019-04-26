@@ -17,8 +17,8 @@ export const typeDefs = `
     email: String!
     name: String!
     profilePicture: String
-    favorites: [Int!]!
-    groceryList: [Int!]!
+    favorites: [ID!]!
+    groceryList: [ID!]!
   }
 
   extend type Query {
@@ -61,6 +61,9 @@ export const resolvers = {
       if (req.user) {
         const user = req.user;
         user.password = null;
+
+        console.log("User: ", user);
+
         return user;
       } else {
         return null;

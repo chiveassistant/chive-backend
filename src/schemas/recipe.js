@@ -28,14 +28,11 @@ export const resolvers = {
   Query: {
     recipeByName: async (obj, { name }, { req, res }, info) => {
       const nameQuery = RegExp(name, "i");
-      console.log(nameQuery);
       const results = await Recipe.find({ name: nameQuery });
-
       return results;
     },
     recipeById: async (obj, { id }, { req, res }, info) => {
       const result = await Recipe.findById(id);
-      console.log(result);
       return result;
     }
   }

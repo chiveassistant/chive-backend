@@ -23,15 +23,6 @@ export const typeDefs = `
   }
 
   extend type Mutation {
-    createRecipe(
-      name: String!
-      description: String
-      ingredients: [IngredientInput!]!
-      directions: [String!]!
-      time: Float
-      rating: Float
-    ): Recipe!
-
     addInventoryItem(
       ingredient: IngredientInput!
     ): User
@@ -39,6 +30,8 @@ export const typeDefs = `
     removeInventoryItem(
       ingredient: IngredientInput!
     ): User
+
+    logout: Boolean!
   }
 `;
 
@@ -61,10 +54,7 @@ export const resolvers = {
         },
         function(err, result) {
           if (err) {
-            console.log("Query failed!");
-          }
-          if (result) {
-            console.log("Result got got!");
+            console.error("recipeByIngredients Failed: ", err);
           }
         }
       );
@@ -73,22 +63,7 @@ export const resolvers = {
     }
   },
   Mutation: {
-    createRecipe: (
-      obj,
-      { name, description, ingredients, directions, time, rating },
-      context,
-      info
-    ) => {
-      console.log("name: ", name);
-      console.log("description: ", description);
-      console.log("ingredients: ", ingredients);
-      console.log("directions: ", directions);
-      console.log("time: ", time);
-      console.log("rating: ", rating);
-    },
-
     addInventoryItem: async (obj, args, { req, res }, info) => {
-      //      console.log("args: ", args);
       var user = req.user;
       if (!user) {
         throw new Error("Not signed in :(");
@@ -113,6 +88,11 @@ export const resolvers = {
       await user.save();
 
       return user;
+    },
+
+    logout: (obj, args, { req, res }, info) => {
+      res.clearCookie("token", { path: "/" });
+      return true;
     }
   }
 };

@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose";
+import { Schema, model, ObjectId } from "mongoose";
 import { ingredientSchema } from "./ingredient";
 
 /**
@@ -29,11 +29,11 @@ export const userSchema = new Schema(
       required: true
     },
     favorites: {
-      type: [Number],
+      type: [ObjectId],
       required: true
     },
     groceryList: {
-      type: [Number],
+      type: [ObjectId],
       required: true
     }
   },

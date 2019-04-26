@@ -46,11 +46,11 @@ connect(
   .then(() => {
     app.listen({ port: serverPort }, () => {
       console.clear();
-      console.log(
+      console.info(
         `Server ready at http://localhost:${serverPort}${server.graphqlPath}`
       );
     });
   })
   .catch(err => {
-    console.log("Encountered error: ", err);
+    console.error("Encountered error: ", err);
   });

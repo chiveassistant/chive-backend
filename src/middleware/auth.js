@@ -20,7 +20,7 @@ export const createToken = async user => {
       }
     );
   } catch (err) {
-    console.log("Create token sign error: ", err);
+    console.error("Create token sign error: ", err);
     return {};
   }
 
@@ -34,7 +34,7 @@ export const refreshToken = async token => {
   try {
     await jwt.verify(token, tokenHash);
   } catch (err) {
-    console.log("Refresh token verify error: ", err);
+    console.error("Refresh token verify error: ", err);
     return {};
   }
 
@@ -45,7 +45,7 @@ export const refreshToken = async token => {
     userEmail = user.email;
     if (!userEmail) throw new Error("User not found!");
   } catch (err) {
-    console.log("Refresh token decode error: ", err);
+    console.error("Refresh token decode error: ", err);
     return {};
   }
 
@@ -59,13 +59,15 @@ export const refreshToken = async token => {
 export const auth = async (req, res, next) => {
   const token = req.cookies.token;
 
-  console.log("User's Cookies: ", req.cookies);
+  console.info("User's Cookies: ", req.cookies);
 
   if (!token) return next();
 
   try {
     const { user, expiration } = jwt.verify(token, tokenHash);
     const databaseUser = await User.findOne({ email: user.email });
+
+    console.log("databaseUser: ", databaseUser);
 
     if (databaseUser) {
       req.user = databaseUser;
@@ -83,13 +85,9 @@ export const auth = async (req, res, next) => {
           domain: corsCookie
         });
       }
-      console.log("Refreshed expiring token");
     }
-
-    console.log("Found user from cookie: ", req.user.email);
   } catch (err) {
-    console.log("Check token verify error: ", err);
-    console.log("User has been logged out due to inactivity.");
+    console.error("Check token verify error: ", err);
     req.user = undefined;
   }
 
