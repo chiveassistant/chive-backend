@@ -52,11 +52,8 @@ export const resolvers = {
         {
           $and: ingredientsQuery
         },
-        function(err, result) {
-          if (err) {
-            console.error("recipeByIngredients Failed: ", err);
-          }
-        }
+        null,
+        { limit: 50 }
       );
 
       return results;

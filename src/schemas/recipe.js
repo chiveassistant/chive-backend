@@ -28,7 +28,9 @@ export const resolvers = {
   Query: {
     recipeByName: async (obj, { name }, { req, res }, info) => {
       const nameQuery = RegExp(name, "i");
-      const results = await Recipe.find({ name: nameQuery });
+      const results = await Recipe.find({ name: nameQuery }, null, {
+        limit: 50
+      });
       return results;
     },
     recipeById: async (obj, { id }, { req, res }, info) => {
