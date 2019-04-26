@@ -84,7 +84,7 @@ export const resolvers = {
       const { token, user } = await createToken(user);
 
       res.cookie("token", token, {
-        maxAge: 60 * 60 * 24 * 7, // 7 days
+        maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
         httpOnly: true,
         domain: corsCookie
       });
@@ -116,7 +116,7 @@ export const resolvers = {
       const { token } = await createToken(user);
 
       res.cookie("token", token, {
-        maxAge: 60 * 60 * 24 * 7, // 7 days
+        maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
         httpOnly: true,
         domain: corsCookie
       });

@@ -78,7 +78,7 @@ export const auth = async (req, res, next) => {
       const { newToken, user } = await refreshToken(token);
       if (newToken && user) {
         res.cookie("token", newToken, {
-          maxAge: 60 * 60 * 24 * 7, // 7 days
+          maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
           httpOnly: true,
           domain: corsCookie
         });
