@@ -12,7 +12,7 @@ export const createToken = async user => {
           email: user.email,
           name: user.name
         },
-        expiration: Date.now() + 60 * 60 * 24 * 7
+        expiration: Date.now() + 1000 * 60 * 60 * 24 * 7
       },
       tokenHash,
       {
@@ -74,11 +74,11 @@ export const auth = async (req, res, next) => {
     }
 
     // if the token is within 2 days of expiring, refresh it
-    if (expiration - Date.now() <= 60 * 60 * 24 * 2) {
+    if (expiration - Date.now() <= 1000 * 60 * 60 * 24 * 2) {
       const { newToken, user } = await refreshToken(token);
       if (newToken && user) {
         res.cookie("token", newToken, {
-          maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+          expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7), // 7 days
           httpOnly: true,
           domain: corsCookie
         });
